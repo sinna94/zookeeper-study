@@ -2,6 +2,7 @@ package chung.me.zookeeperstudy
 
 import org.springframework.cloud.client.ServiceInstance
 import org.springframework.cloud.client.discovery.DiscoveryClient
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient
 import org.springframework.cloud.zookeeper.serviceregistry.ServiceInstanceRegistration
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,6 +16,7 @@ class ZooKeeperController(
     private val discoveryClient: DiscoveryClient,
     private val serviceRegistry: ZookeeperServiceRegistry,
     private val zookeeperListener: ZookeeperListener,
+    private val loadBalancer: LoadBalancerClient,
 ){
 
     @GetMapping
@@ -24,6 +26,11 @@ class ZooKeeperController(
             return null
         }
         return instances[0]
+    }
+
+    @GetMapping("lb")
+    fun getServiceInstanceUsingLB(): ServiceInstance {
+        return loadBalancer.choose("ZooKeeperTest")
     }
 
     @GetMapping("listener")

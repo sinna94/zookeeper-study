@@ -6,6 +6,9 @@ spring:
       connect-string: localhost:2181
       discovery:
         enabled: true
+      dependencies:
+        dependencyOne:
+          path: ZooKeeperTest
 logging:
   level:
-    org.apache.zookeeper.ClientCnxn: WARN?
+    org.apache.zookeeper.ClientCnxn: WARN
