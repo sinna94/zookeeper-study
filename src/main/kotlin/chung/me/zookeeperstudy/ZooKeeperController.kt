@@ -5,10 +5,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient
 import org.springframework.cloud.zookeeper.serviceregistry.ServiceInstanceRegistration
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("zoo-keeper")
@@ -27,6 +24,17 @@ class ZooKeeperController(
         }
         return instances[0]
     }
+
+//    @GetMapping
+//    fun getNodeData(
+//        @RequestParam path: String,
+//        @RequestParam watcherFlag: Boolean
+//    ): String {
+//        val zkManager = ZKManagerImpl()
+//        val zNodeData = zkManager.getZNodeData(path, watcherFlag)
+//        zkManager.closeConnection()
+//        return zNodeData
+//    }
 
     @GetMapping("lb")
     fun getServiceInstanceUsingLB(): ServiceInstance {
@@ -56,6 +64,29 @@ class ZooKeeperController(
         return instances[0].uri.toString()
     }
 
+    @PostMapping
+    fun createNode(
+        @RequestParam path: String,
+        @RequestParam data: ByteArray,
+    ) {
+//        val zkManager = ZKManagerImpl()
+//        zkManager.create(path, data)
+//        zkManager.closeConnection()
+        ServiceInstanceRegistration.builder().defaultUriSpec().address("/test/url").port(9000)
+            .name("/test/anotherService").build().let {
+                serviceRegistry.register(it)
+            }
+    }
+
+//    @PatchMapping
+//    fun updateNode(
+//        @RequestParam path: String,
+//        @RequestParam data: ByteArray,
+//    ) {
+//        val zkManager = ZKManagerImpl()
+//        zkManager.update(path, data)
+//        zkManager.closeConnection()
+//    }
     @PostMapping
     fun register() {
         ServiceInstanceRegistration.builder().defaultUriSpec().address("/test/url").port(9000)
